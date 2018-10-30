@@ -21,6 +21,9 @@ contract NodeList is Ownable {
     uint256 nodeIndexLength;
     NodeInfo[] private allNodes;
 
+    event NodeRegisted(uint256 nodeID, bytes16 ipAddr, uint16 portNumber);
+    event NodeUnregisted(uint256 nodeID);
+
     function registerNode(bytes16 ipAddr, uint16 portNumber) public onlyOwner {
         NodeInfo memory nodeInfo = NodeInfo(ipAddr, portNumber);
         allNodes.push(nodeInfo);
@@ -28,6 +31,7 @@ contract NodeList is Ownable {
         nodeIndex[nodeIndexLength] = nodeID;
         nodeIndexLookup[nodeID] = nodeIndexLength;
         nodeIndexLength = nodeIndexLength.add(1);
+        emit NodeRegisted(nodeID, ipAddr, portNumber);
     }
 
     // function getNode() public view returns(NodeInfo[]) {
@@ -59,5 +63,6 @@ contract NodeList is Ownable {
         nodeIndex[unregisterNodeIndex] = lastNodeIndex;
         nodeIndexLookup[lastNodeID] = unregisterNodeIndex;
         nodeIndexLength = nodeIndexLength.sub(1);
+        emit NodeUnregisted(nodeID);
     }
 }
